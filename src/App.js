@@ -18,6 +18,30 @@ const list = [
     num_comments: 2,
     points: 5,
     objectID: 1
+  },
+  {
+    title: 'Angular',
+    url: 'https://github.com/reactjs/redux',
+    author: 'Dan Abramov, Andrew Clark',
+    num_comments: 2,
+    points: 5,
+    objectID: 2
+  },
+  {
+    title: 'Knockt',
+    url: 'https://github.com/reactjs/redux',
+    author: 'Dan Abramov, Andrew Clark',
+    num_comments: 2,
+    points: 5,
+    objectID: 3
+  },
+  {
+    title: 'Heelo',
+    url: 'https://github.com/reactjs/redux',
+    author: 'Dan Abramov, Andrew Clark',
+    num_comments: 2,
+    points: 5,
+    objectID: 4
   }
 ];
 
