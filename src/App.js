@@ -53,9 +53,33 @@ const list = [
  */
 const isSearched = searchTerm => item => item.title.toLowerCase().includes(searchTerm.toLowerCase());
 
+class Button extends Component {
+  render() {
+    const {
+      onClick,
+      // 这样当使用 Button 组件时，若没有指定 className 属性，它的值就是一个空字符串，而非 undefined
+      className = '',
+      children
+    } = this.props;
+
+    return (
+      <button
+        type='button'
+        onClick={onClick}
+        className={className}
+      >
+        {children}
+      </button>
+    )
+  }
+}
 class Search extends Component {
   render() {
-    const { value, onChange, children } = this.props;
+    const {
+      value,
+      onChange,
+      children
+    } = this.props;
 
     return (
       <form>
@@ -72,7 +96,11 @@ class Search extends Component {
 
 class Table extends Component {
   render() {
-    const { list, pattern, onDismiss } = this.props;
+    const {
+      list,
+      pattern,
+      onDismiss
+    } = this.props;
     return (
       <div>
         {list.filter(isSearched(pattern)).map(item => 
@@ -84,12 +112,11 @@ class Table extends Component {
             <span>{item.num_comments} </span>
             <span>{item.points} </span>
             <span>
-              <button
+              <Button
                 onClick={() => onDismiss(item.objectID)}
-                type='button'
               >
                 Dismiss
-              </button>
+              </Button>
             </span>
           </div>
         )}
@@ -97,6 +124,7 @@ class Table extends Component {
     )
   }
 }
+
 class App extends Component {
 
   constructor(props) {
