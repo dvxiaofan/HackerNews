@@ -51,79 +51,50 @@ const list = [
  * @param {*} searchTerm
  * @returns
  */
-const isSearched = searchTerm => item => item.title.toLowerCase().includes(searchTerm.toLowerCase());
+const isSearched = searchTerm => 
+  item =>
+  item.title.toLowerCase().includes(searchTerm.toLowerCase());
 
-class Button extends Component {
-  render() {
-    const {
-      onClick,
-      // 这样当使用 Button 组件时，若没有指定 className 属性，它的值就是一个空字符串，而非 undefined
-      className = '',
-      children
-    } = this.props;
+const Button = ({ onClick, className, children }) =>
+  <button
+    type='button'
+    onClick={onClick}
+    className={className}
+  >
+    {children}
+  </button>
 
-    return (
-      <button
-        type='button'
-        onClick={onClick}
-        className={className}
-      >
-        {children}
-      </button>
-    )
-  }
-}
-class Search extends Component {
-  render() {
-    const {
-      value,
-      onChange,
-      children
-    } = this.props;
+// 函数式无状态组件
+const Search = ({ value, onChange, children }) => 
+  <form>
+    {children}
+    <input
+      type='text'
+      value={value}
+      onChange={onChange}
+    />
+  </form>
 
-    return (
-      <form>
-        {children}
-        <input
-          type='text'
-          value={value}
-          onChange={onChange}
-        />
-      </form>
-    )
-  }
-}
-
-class Table extends Component {
-  render() {
-    const {
-      list,
-      pattern,
-      onDismiss
-    } = this.props;
-    return (
-      <div>
-        {list.filter(isSearched(pattern)).map(item => 
-          <div key={item.objectID}>
-            <span>
-              <a href={item.url}>{item.title}</a>
-            </span>
-            <span>{item.author} </span>
-            <span>{item.num_comments} </span>
-            <span>{item.points} </span>
-            <span>
-              <Button
-                onClick={() => onDismiss(item.objectID)}
-              >
-                Dismiss
-              </Button>
-            </span>
-          </div>
-        )}
+const Table = ({ list, pattern, onDismiss }) => 
+  <div>
+    {list.filter(isSearched(pattern)).map(item => 
+      <div key={item.objectID}>
+        <span>
+          <a href={item.url}>{item.title}</a>
+        </span>
+        <span>{item.author} </span>
+        <span>{item.num_comments} </span>
+        <span>{item.points} </span>
+        <span>
+          <Button
+            onClick={() => onDismiss(item.objectID)}
+          >
+            Dismiss
+          </Button>
+        </span>
       </div>
-    )
-  }
-}
+    )}
+  </div>
 
 class App extends Component {
 
