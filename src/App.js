@@ -86,7 +86,9 @@ class App extends Component {
       <div className="App">
         <form>
           <input
-            type='text' 
+            type='text'
+            // input 设置value属性， 变为可控组件
+            value={searchTerm}
             onChange={this.onSearchChange}
           />
         </form>
