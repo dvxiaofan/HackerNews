@@ -150,3 +150,10 @@ class App extends Component {
 }
 
 export default App;
+
+// 用于测试
+export {
+  Button,
+  Search,
+  Table
+};
