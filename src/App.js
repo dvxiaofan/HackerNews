@@ -8,18 +8,7 @@ const PATH_BASE = 'https://hn.algolia.com/api/v1';
 const PATH_SEARCH = '/search';
 const PARAM_SEARCH = 'query=';
 
-/**
- * 定义一个高阶函数
- * ES6 箭头函数优化
- * @param {*} searchTerm
- * @returns
- */
-const isSearched = searchTerm => 
-  item =>
-  item.title.toLowerCase().includes(searchTerm.toLowerCase());
-
 class App extends Component {
-
   constructor(props) {
     super(props);
 
@@ -31,6 +20,7 @@ class App extends Component {
     this.setSearchTopStories = this.setSearchTopStories.bind(this);
     this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
+    this.onSearchSubmit = this.onSearchSubmit.bind(this);
     this.onDismiss = this.onDismiss.bind(this);
   }
 
@@ -50,9 +40,16 @@ class App extends Component {
 
     this.fetchSearchTopStories(searchTerm);
   }
-
+  
   onSearchChange(event) {
     this.setState({ searchTerm: event.target.value });
+  }
+
+  onSearchSubmit(event) {
+    const { searchTerm } = this.state;
+    this.fetchSearchTopStories(searchTerm);
+    // 组织浏览器的原生行为
+    event.preventDefault();
   }
 
   onDismiss(id) {
@@ -69,20 +66,21 @@ class App extends Component {
       searchTerm,
       result
     } = this.state;
-    
+
     return (
       <div className="page">
         <div className='interactions'>
           <Search
             value={searchTerm}
             onChange={this.onSearchChange}
+            onSubmit = {this.onSearchSubmit}
           >
+          Search
           </Search>
         </div>
         { result ? 
           <Table
           list={result.hits}
-          pattern={searchTerm}
           onDismiss={this.onDismiss}
           />
           : null
@@ -92,7 +90,11 @@ class App extends Component {
   }
 }
 
-const Button = ({ onClick, className, children }) =>
+const Button = ({
+  onClick,
+  className,
+  children 
+}) => (
   <button
     type='button'
     onClick={onClick}
@@ -100,17 +102,26 @@ const Button = ({ onClick, className, children }) =>
   >
     {children}
   </button>
+)
 
 // 函数式无状态组件
-const Search = ({ value, onChange, children }) => 
-  <form>
+const Search = ({
+  value,
+  onSubmit,
+  onChange,
+  children
+}) => (
+  <form onSubmit={onSubmit}>
     <input
       type='text'
       value={value}
       onChange={onChange}
     />
-    <button type='submit'>Search</button>
+    <button type='submit'>
+      {children}
+    </button>
   </form>
+)
 
 // 定义三个自适应宽度
 const largeColumn = {
@@ -123,9 +134,12 @@ const smallColumn = {
   width: '10%',
 };
 
-const Table = ({ list, pattern, onDismiss }) => 
+const Table = ({
+  list,
+  onDismiss
+}) => (
   <div className='table'>
-    {list.filter(isSearched(pattern)).map(item => 
+    {list.map(item => 
       <div key={item.objectID} className='table-row'>
         {/* 使用内联样式来使 Table 的列宽自适应 */}
         <span style={largeColumn}>
@@ -145,5 +159,6 @@ const Table = ({ list, pattern, onDismiss }) =>
       </div>
     )}
   </div>
+)
 
 export default App;
