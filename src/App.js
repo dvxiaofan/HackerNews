@@ -3,10 +3,13 @@ import './App.css';
 
 
 const DEFAULT_QUERY = 'redux';
+const DEFAULT_HPP = '12';
 
 const PATH_BASE = 'https://hn.algolia.com/api/v1';
 const PATH_SEARCH = '/search';
 const PARAM_SEARCH = 'query=';
+const PARAM_PAGE = 'page='; // 使用分页显示
+const PARAM_HPP = 'hitsPerPage=';
 
 class App extends Component {
   constructor(props) {
@@ -14,7 +17,7 @@ class App extends Component {
 
     this.state = {
       searchTerm: DEFAULT_QUERY,
-      result: ''
+      result: '',
     }
 
     this.setSearchTopStories = this.setSearchTopStories.bind(this);
@@ -25,11 +28,19 @@ class App extends Component {
   }
 
   setSearchTopStories(result) {
-    this.setState({ result });
+    const { hits, page } = result;
+    const oldHits = page !== 0 ? this.state.result.hits : [];
+    const updatedHits = [
+      ...oldHits,
+      ...hits
+    ];
+    this.setState({
+      result: { hits: updatedHits, page }
+    });
   }
 
-  fetchSearchTopStories(searchTerm) {
-    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}`)
+  fetchSearchTopStories(searchTerm, page = 0) {
+    fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
       .then(response => response.json())
       .then(result => this.setSearchTopStories(result))
       .catch(e => e);
@@ -66,6 +77,7 @@ class App extends Component {
       searchTerm,
       result
     } = this.state;
+    const page = (result && result.page) || 0;
 
     return (
       <div className="page">
@@ -78,12 +90,18 @@ class App extends Component {
           Search
           </Search>
         </div>
-        { result ? 
+        { result &&
           <Table
           list={result.hits}
           onDismiss={this.onDismiss}
           />
-          : null
+        }
+        { result && 
+          <div className='interactions'>
+            <Button onClick={() => this.fetchSearchTopStories(searchTerm, page + 1)} >
+              More
+            </Button>
+          </div>
         }
       </div>
     );
