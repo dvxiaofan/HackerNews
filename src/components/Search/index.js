@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 // 函数式无状态组件
 const Search = ({
@@ -18,5 +19,11 @@ const Search = ({
     </button>
   </form>
 )
+
+Search.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  children: PropTypes.node.isRequired,
+}
 
 export default Search;

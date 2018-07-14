@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Button from '../Button';
 import './index.css';
 
@@ -40,5 +41,10 @@ const Table = ({
     )}
   </div>
 )
+
+Table.propTypes = {
+  list: PropTypes.array.isRequired,
+  onDismiss: PropTypes.func,
+}
 
 export default Table;
