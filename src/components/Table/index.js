@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { sortBy } from 'lodash';
+import classNames from 'classnames';
 import Button from '../Button';
 import './index.css';
 
@@ -25,14 +26,27 @@ const SORTS = {
   POINTS: list => sortBy(list, 'points').reverse(),
 };
 
-const Sort = ({ sortKey, onSort, children }) => (
-  <Button
-    className='button-inline'
-    onClick={() => onSort(sortKey)}
-  >
-    {children}
-  </Button>
-)
+const Sort = ({
+  sortKey,
+  onSort,
+  activeSortKey,
+  children
+}) => {
+  const sortClass = classNames(
+    'button-inline',
+    { 'button-active': sortKey === activeSortKey }
+  );
+
+  return (
+    <Button
+      className={sortClass}
+      onClick={() => onSort(sortKey)}
+    >
+      {children}
+    </Button>
+  )
+}
+
 
 const Table = ({
   list,
@@ -52,6 +66,7 @@ const Table = ({
           <Sort
             sortKey={'TITLE'}
             onSort={onSort}
+            activeSortKey={sortKey}
           >
             Title
           </Sort>
@@ -60,6 +75,7 @@ const Table = ({
           <Sort
             sortKey={'AUTHOR'}
             onSort={onSort}
+            activeSortKey={sortKey}
           >
             Author
           </Sort>
@@ -68,6 +84,7 @@ const Table = ({
           <Sort
             sortKey={'COMMENTS'}
             onSort={onSort}
+            activeSortKey={sortKey}
           >
             Comments
           </Sort>
@@ -76,6 +93,7 @@ const Table = ({
           <Sort
             sortKey={'POINTS'}
             onSort={onSort}
+            activeSortKey={sortKey}
           >
             Points
           </Sort>
