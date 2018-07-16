@@ -38,67 +38,74 @@ const Table = ({
   list,
   sortKey,
   onSort,
+  isSortReverse,
   onDismiss,
-}) => (
-  <div className='table'>
-    <div className='table-header'>
-      <span style={largeColumn}>
-        <Sort
-          sortKey={'TITLE'}
-          onSort={onSort}
-        >
-          Title
-        </Sort>
-      </span>
-      <span style={midColumn}>
-        <Sort
-          sortKey={'AUTHOR'}
-          onSort={onSort}
-        >
-          Author
-        </Sort>
-      </span>
-      <span style={smallColumn}>
-        <Sort
-          sortKey={'COMMENTS'}
-          onSort={onSort}
-        >
-          Comments
-        </Sort>
-      </span>
-      <span style={smallColumn}>
-        <Sort
-          sortKey={'POINTS'}
-          onSort={onSort}
-        >
-          Points
-        </Sort>
-      </span>
-      <span style={smallColumn}>
-        Archive
-      </span>
-    </div>
-    {SORTS[sortKey](list).map(item => 
-      <div key={item.objectID} className='table-row'>
-        {/* 使用内联样式来使 Table 的列宽自适应 */}
+}) => {
+  const sortedList = SORTS[sortKey](list);
+  const reverseSortedList = isSortReverse 
+    ? sortedList.reverse()
+    : sortedList;
+  return (
+    <div className='table'>
+      <div className='table-header'>
         <span style={largeColumn}>
-          <a href={item.url}>{item.title}</a>
-        </span>
-        <span style={midColumn}>{item.author} </span>
-        <span style={smallColumn}>{item.num_comments} </span>
-        <span style={smallColumn}>{item.points} </span>
-        <span style={smallColumn}>
-          <Button
-            onClick={() => onDismiss(item.objectID)}
-            className='button-inline'
+          <Sort
+            sortKey={'TITLE'}
+            onSort={onSort}
           >
-            Dismiss
-          </Button>
+            Title
+          </Sort>
+        </span>
+        <span style={midColumn}>
+          <Sort
+            sortKey={'AUTHOR'}
+            onSort={onSort}
+          >
+            Author
+          </Sort>
+        </span>
+        <span style={smallColumn}>
+          <Sort
+            sortKey={'COMMENTS'}
+            onSort={onSort}
+          >
+            Comments
+          </Sort>
+        </span>
+        <span style={smallColumn}>
+          <Sort
+            sortKey={'POINTS'}
+            onSort={onSort}
+          >
+            Points
+          </Sort>
+        </span>
+        <span style={smallColumn}>
+          Archive
         </span>
       </div>
-    )}
-  </div>
-)
+      {reverseSortedList.map(item => 
+        <div key={item.objectID} className='table-row'>
+          {/* 使用内联样式来使 Table 的列宽自适应 */}
+          <span style={largeColumn}>
+            <a href={item.url}>{item.title}</a>
+          </span>
+          <span style={midColumn}>{item.author} </span>
+          <span style={smallColumn}>{item.num_comments} </span>
+          <span style={smallColumn}>{item.points} </span>
+          <span style={smallColumn}>
+            <Button
+              onClick={() => onDismiss(item.objectID)}
+              className='button-inline'
+            >
+              Dismiss
+            </Button>
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
 
 Table.propTypes = {
   list: PropTypes.array.isRequired,
