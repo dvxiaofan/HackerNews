@@ -13,6 +13,11 @@ import {
 } from '../../constants/index.js'
 import './index.css';
 
+
+const Loading = () => (
+  <div>Loading ... </div>
+)
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +27,7 @@ class App extends Component {
       results: null,
       searchKey: '',   // 储存单个 result
       error: null,
+      isLoading: false,
     }
 
     this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
@@ -52,11 +58,14 @@ class App extends Component {
       results: {
         ...results,
         [searchKey]: { hits: updatedHits, page }
-      }
+      },
+      isLoading: false
     });
   }
 
   fetchSearchTopStories(searchTerm, page = 0) {
+    this.setState({ isLoading: true });
+
     fetch(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
       .then(response => response.json())
       .then(result => this.setSearchTopStories(result))
@@ -104,7 +113,8 @@ class App extends Component {
       searchTerm,
       results,
       searchKey,
-      error
+      error,
+      isLoading,
     } = this.state;
 
     const page = (
@@ -140,9 +150,13 @@ class App extends Component {
           />
         }
         <div className='interactions'>
-          <Button onClick={() => this.fetchSearchTopStories(searchKey, page + 1)} >
-            More
-          </Button>
+          { isLoading 
+            ? <Loading />
+            : <Button
+              onClick={() => this.fetchSearchTopStories(searchKey, page + 1)} >
+              More
+            </Button>
+          }
         </div>
       </div>
     );
