@@ -41,6 +41,7 @@ class App extends Component {
 
     this.needsToSearchTopStories = this.needsToSearchTopStories.bind(this);
     this.setSearchTopStories = this.setSearchTopStories.bind(this);
+    this.updateSearchTopStoriesState = this.updateSearchTopStoriesState.bind(this);
     this.fetchSearchTopStories = this.fetchSearchTopStories.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
     this.onSearchSubmit = this.onSearchSubmit.bind(this);
@@ -52,25 +53,32 @@ class App extends Component {
   }
 
   setSearchTopStories(result) {
-    const { hits, page } = result;
-    const { searchKey, results } = this.state;
+    const { hits, page } = result;    
+    this.setState(this.updateSearchTopStoriesState(hits, page));
+  }
+
+  updateSearchTopStoriesState = (hits, page) => (prevState) => {
+    const {
+      searchKey,
+      results,
+    } = prevState;
     // 检查是否有缓存数据
     const oldHits = results && results[searchKey]
       ? results[searchKey].hits
       : [];
     const updatedHits = [
-      ...oldHits,
-      ...hits
+        ...oldHits,
+        ...hits
     ];
 
-    this.setState({
+    return {
       results: {
         ...results,
         [searchKey]: { hits: updatedHits, page }
       },
       isLoading: false
-    });
-  }
+    };
+  };
 
   fetchSearchTopStories(searchTerm, page = 0) {
     this.setState({ isLoading: true });
